@@ -1,0 +1,43 @@
+###
+#@notes:'This is a plain translation of an SBML model created on 12/01/2016. The original model has 3 molecules and 4 reactions. The translated model has 3 molecules and 4 rules'
+###
+begin model
+begin parameters
+end parameters
+begin compartments
+	default_compartment  3  1.0
+end compartments
+begin molecule types
+	H()
+	S()
+	D()
+end molecule types
+begin seed species
+	@default_compartment:H() 100.0 #H #H
+end seed species
+begin observables
+	Species H H() #H
+	Species S S() #S
+	Species D D() #D
+end observables
+begin functions
+	functionRate0() = if(0.2>= 0,0.2,0)
+	functionRate0m() = if(if(S>0,H * 0.2/S,0)< 0,-(if(S>0,H * 0.2/S,0)),0)
+	functionRate1() = if(0.01>= 0,0.01,0)
+	functionRate1m() = if(if(D>0,H * 0.01/D,0)< 0,-(if(D>0,H * 0.01/D,0)),0)
+	functionRate2() = if(0.1>= 0,0.1,0)
+	functionRate2m() = if(if(H>0,S * 0.1/H,0)< 0,-(if(H>0,S * 0.1/H,0)),0)
+	functionRate3() = if(0.3>= 0,0.3,0)
+	functionRate3m() = if(if(D>0,S * 0.3/D,0)< 0,-(if(D>0,S * 0.3/D,0)),0)
+end functions
+begin reaction rules
+	J00: H() <-> S() functionRate0(),functionRate0m()
+	J02: H() <-> D() functionRate1(),functionRate1m()
+	J10: S() <-> H() functionRate2(),functionRate2m()
+	J12: S() <-> D() functionRate3(),functionRate3m()
+end reaction rules
+end model
+
+# The following lines were manually added after translation to execute the model
+generate_network({overwrite=>1})
+simulate({method=>"ssa", t_end=>10, n_steps=>10, verbose=>1, seed=>0})

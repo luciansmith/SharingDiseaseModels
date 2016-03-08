@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PharmML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.pharmml.org/pharmml/0.7/PharmML"
+    xsi:schemaLocation="http://www.pharmml.org/pharmml/0.7/PharmML http://www.pharmml.org/pharmml/0.7/PharmML"
+    xmlns:math="http://www.pharmml.org/pharmml/0.7/Maths"
+    xmlns:ct="http://www.pharmml.org/pharmml/0.7/CommonTypes"
+    xmlns:ds="http://www.pharmml.org/pharmml/0.7/Dataset"
+    xmlns:mstep="http://www.pharmml.org/pharmml/0.7/ModellingSteps"
+    implementedBy="MJS" writtenVersion="0.8" id="i1">
+    
+    <ct:Name>Example 3: Stratified Markov Model</ct:Name>
+    
+    <ct:Description>Stratified Markov Model from Sharing Disease Models Paper DRAFT</ct:Description>
+    
+    <IndependentVariable symbId="t"/>
+    
+    <!-- SECTION I -->
+    <ModelDefinition xmlns="http://www.pharmml.org/pharmml/0.7/ModelDefinition">
+        
+        <!-- COVARIATES -->
+        <CovariateModel blkId="cm1">
+            <Covariate symbId="Age">
+                <Continuous/>
+            </Covariate>
+
+            <Covariate symbId="Sex">
+                <Categorical>
+                    <Category catId="F"/>
+                    <Category catId="M"/>
+                </Categorical>
+            </Covariate>
+        </CovariateModel>
+        
+        <!-- OBSERVATIONS -->
+        <ObservationModel blkId="om1">
+            <Discrete>
+                <CategoricalData ordered="no">
+                    
+                    <ListOfCategories> 
+                        <Category symbId="Healthy"/>
+                        <Category symbId="Sick"/>
+                        <Category symbId="Dead"/>
+                    </ListOfCategories>
+                    
+                    <CategoryVariable symbId="y"/>
+
+                    <!-- vector (100,0) people - see ModellingSteps/SimulationStep -->
+                    <InitialStateVariable symbId="yinit"/>
+                    <PreviousStateVariable symbId="yp"/>
+                    
+                    <Dependance type="discreteMarkov"/>
+                    
+                    <TransitionMatrix symbId="T1">
+                        <ct:Matrix matrixType="Any">
+                            <ct:ColumnNames>
+                                <ct:SymbRef symbIdRef="Healthy"/>
+                                <ct:SymbRef symbIdRef="Sick"/>
+                                <ct:SymbRef symbIdRef="Dead"/>
+                            </ct:ColumnNames>
+                            <ct:MatrixRow>
+                                <ct:Real>0.7</ct:Real>
+                                <ct:Assign>
+                                    <ct:Piecewise>
+                                        <math:Piece>
+                                            <ct:Real>0.8</ct:Real>
+                                            <math:Condition>
+                                                <math:LogicBinop op="eq">
+                                                    <ct:SymbRef symbIdRef="Sex"/>
+                                                    <ct:CatRef catIdRef="F"/>
+                                                </math:LogicBinop>
+                                            </math:Condition>
+                                        </math:Piece>
+                                        <math:Piece>
+                                            <ct:Real>0.7</ct:Real>
+                                            <math:Condition>
+                                                <math:LogicBinop op="eq">
+                                                    <ct:SymbRef symbIdRef="Sex"/>
+                                                    <ct:CatRef catIdRef="M"/>
+                                                </math:LogicBinop>
+                                            </math:Condition>
+                                        </math:Piece>
+                                    </ct:Piecewise>
+                                </ct:Assign>
+                                <ct:Real>0.1</ct:Real>
+                            </ct:MatrixRow>
+                            <ct:MatrixRow>
+                                <ct:Real>0.1</ct:Real><ct:Real>0.6</ct:Real><ct:Real>0.3</ct:Real>
+                            </ct:MatrixRow>
+                            <ct:MatrixRow>
+                                <ct:Real>0</ct:Real><ct:Real>0</ct:Real><ct:Real>0.1</ct:Real>
+                            </ct:MatrixRow>
+                        </ct:Matrix>
+                    </TransitionMatrix>
+                    
+                    <!-- P(Yp=Healthy -> Y=Sick | SEX=F)=0.1 -->
+                    <ProbabilityAssignment>
+                        <Probability>
+                            <CurrentState>
+                                <math:LogicBinop op="eq">
+                                    <ct:SymbRef symbIdRef="Y"/>
+                                    <ct:SymbRef symbIdRef="Dead"/>
+                                </math:LogicBinop>
+                            </CurrentState>
+                            <PreviousState>
+                                <math:LogicBinop op="eq">
+                                    <ct:SymbRef symbIdRef="Yp"/>
+                                    <ct:SymbRef symbIdRef="Sick"/>
+                                </math:LogicBinop>
+                            </PreviousState>
+                            <Condition>
+                                <math:LogicBinop op="eq">
+                                    <ct:SymbRef symbIdRef="SEX"/>
+                                    <ct:CatRef catIdRef="F"/>
+                                </math:LogicBinop>
+                            </Condition>
+                        </Probability>
+                        <ct:Assign>
+                            <ct:Real>0.1</ct:Real>
+                        </ct:Assign>
+                    </ProbabilityAssignment>
+                    
+                    <!-- P(Yp=Healthy -> Y=Sick | SEX=M)=0.1 -->
+                    <ProbabilityAssignment>
+                        <Probability>
+                            <CurrentState>
+                                <math:LogicBinop op="eq">
+                                    <ct:SymbRef symbIdRef="Y"/>
+                                    <ct:SymbRef symbIdRef="Sick"/>
+                                </math:LogicBinop>
+                            </CurrentState>
+                            <PreviousState>
+                                <math:LogicBinop op="eq">
+                                    <ct:SymbRef symbIdRef="Yp"/>
+                                    <ct:SymbRef symbIdRef="Healthy"/>
+                                </math:LogicBinop>
+                            </PreviousState>
+                            <Condition>
+                                <math:LogicBinop op="eq">
+                                    <ct:SymbRef symbIdRef="SEX"/>
+                                    <ct:CatRef catIdRef="M"/>
+                                </math:LogicBinop>
+                            </Condition>
+                        </Probability>
+                        <ct:Assign>
+                            <ct:Real>0.2</ct:Real>
+                        </ct:Assign>
+                    </ProbabilityAssignment>
+                    
+                </CategoricalData>
+            </Discrete>
+        </ObservationModel>
+    </ModelDefinition>
+
+
+
+    <!-- OBSERVATION DEFINITION: Amount of people in each state for years 1-10 -->
+    <TrialDesign xmlns="http://www.pharmml.org/pharmml/0.7/TrialDesign">
+
+        <Observations>
+            <Observation oid="obsOid">
+                <ObservationTimes>
+                    <ct:Assign>
+                        <ct:Sequence>
+                            <ct:Begin>
+                                <ct:Real>1</ct:Real>
+                            </ct:Begin>
+                            <ct:StepSize>
+                                <ct:Real>1</ct:Real>
+                            </ct:StepSize>
+                            <ct:End>
+                                <ct:Real>10</ct:Real>
+                            </ct:End>
+                        </ct:Sequence>
+                    </ct:Assign>
+                </ObservationTimes>
+                <Discrete>
+                    <ct:SymbRef blkIdRef="om1" symbIdRef="y"/>
+                </Discrete>
+            </Observation>
+        </Observations>
+        
+    </TrialDesign>
+    
+
+
+    <!-- SIMULATION TASK DESCRIPTION -->
+    <mstep:ModellingSteps>
+        <mstep:SimulationStep oid="simOid">
+            
+            <mstep:ObservationsReference>
+                <ct:OidRef oidRef="obsOid"/>
+            </mstep:ObservationsReference>
+            
+            <ct:VariableAssignment>
+                <ct:SymbRef blkIdRef="om1" symbIdRef="yinit"/>
+                <ct:Assign>
+                    <ct:Vector>
+                        <ct:VectorElements>
+                            <ct:Real>100</ct:Real>
+                            <ct:Real>0</ct:Real>
+                        </ct:VectorElements>
+                    </ct:Vector>
+                </ct:Assign>
+            </ct:VariableAssignment>
+            
+            <mstep:Operation order="1" opType="Amount of people in each state for years 1-10"/>
+        </mstep:SimulationStep>
+    </mstep:ModellingSteps>
+</PharmML>

@@ -1,0 +1,63 @@
+###
+#@notes:'This is a plain translation of an SBML model created on 12/01/2016. The original model has 6 molecules and 8 reactions. The translated model has 6 molecules and 8 rules'
+###
+begin model
+begin parameters
+end parameters
+begin compartments
+	default_compartment  3  1.0
+end compartments
+begin molecule types
+	MH()
+	MS()
+	MD()
+	FH()
+	FS()
+	FD()
+end molecule types
+begin seed species
+	@default_compartment:MH() 50.0 #MH #MH
+	@default_compartment:FH() 50.0 #FH #FH
+end seed species
+begin observables
+	Species MH MH() #MH
+	Species MS MS() #MS
+	Species MD MD() #MD
+	Species FH FH() #FH
+	Species FS FS() #FS
+	Species FD FD() #FD
+end observables
+begin functions
+	functionRate0() = if(0.2>= 0,0.2,0)
+	functionRate0m() = if(if(MS>0,MH * 0.2/MS,0)< 0,-(if(MS>0,MH * 0.2/MS,0)),0)
+	functionRate1() = if(0.01>= 0,0.01,0)
+	functionRate1m() = if(if(MD>0,MH * 0.01/MD,0)< 0,-(if(MD>0,MH * 0.01/MD,0)),0)
+	functionRate2() = if(0.1>= 0,0.1,0)
+	functionRate2m() = if(if(MH>0,MS * 0.1/MH,0)< 0,-(if(MH>0,MS * 0.1/MH,0)),0)
+	functionRate3() = if(0.3>= 0,0.3,0)
+	functionRate3m() = if(if(MD>0,MS * 0.3/MD,0)< 0,-(if(MD>0,MS * 0.3/MD,0)),0)
+	functionRate4() = if(0.1>= 0,0.1,0)
+	functionRate4m() = if(if(FS>0,FH * 0.1/FS,0)< 0,-(if(FS>0,FH * 0.1/FS,0)),0)
+	functionRate5() = if(0.01>= 0,0.01,0)
+	functionRate5m() = if(if(FD>0,FH * 0.01/FD,0)< 0,-(if(FD>0,FH * 0.01/FD,0)),0)
+	functionRate6() = if(0.1>= 0,0.1,0)
+	functionRate6m() = if(if(FH>0,FS * 0.1/FH,0)< 0,-(if(FH>0,FS * 0.1/FH,0)),0)
+	functionRate7() = if(0.3>= 0,0.3,0)
+	functionRate7m() = if(if(FD>0,FS * 0.3/FD,0)< 0,-(if(FD>0,FS * 0.3/FD,0)),0)
+end functions
+begin reaction rules
+	MJ00: MH() <-> MS() functionRate0(),functionRate0m()
+	MJ02: MH() <-> MD() functionRate1(),functionRate1m()
+	MJ10: MS() <-> MH() functionRate2(),functionRate2m()
+	MJ12: MS() <-> MD() functionRate3(),functionRate3m()
+	FJ00: FH() <-> FS() functionRate4(),functionRate4m()
+	FJ02: FH() <-> FD() functionRate5(),functionRate5m()
+	FJ10: FS() <-> FH() functionRate6(),functionRate6m()
+	FJ12: FS() <-> FD() functionRate7(),functionRate7m()
+end reaction rules
+end model
+
+# The following lines were manually added after translation to execute the model
+generate_network({overwrite=>1})
+simulate({method=>"ssa", t_end=>10, n_steps=>10, verbose=>1, seed=>0})
+

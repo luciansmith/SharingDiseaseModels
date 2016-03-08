@@ -1,0 +1,34 @@
+###
+#@notes:'This is a plain translation of an SBML model created on 12/01/2016. The original model has 2 molecules and 1 reactions. The translated model has 2 molecules and 1 rules'
+###
+begin model
+begin parameters
+end parameters
+begin compartments
+	default_compartment  3  1.0
+end compartments
+begin molecule types
+	A()
+	D()
+end molecule types
+begin seed species
+	@default_compartment:A() 100.0 #A #A
+end seed species
+begin observables
+	Species A A() #A
+	Species D D() #D
+end observables
+begin functions
+	functionRate0() = if(0.05>= 0,0.05,0)
+	functionRate0m() = if(if(D>0,A * 0.05/D,0)< 0,-(if(D>0,A * 0.05/D,0)),0)
+end functions
+begin reaction rules
+	J0: A() <-> D() functionRate0(),functionRate0m()
+end reaction rules
+end model
+
+# The following lines were manually added after translation to execute the model
+generate_network({overwrite=>1})
+simulate({method=>"ssa", t_end=>10, n_steps=>10, verbose=>1, seed=>0})
+
+
