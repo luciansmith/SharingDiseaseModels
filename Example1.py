@@ -10,6 +10,7 @@
 #Output requested: Amount of people in each state for years 1-10.
 
 import tellurium as te
+import matplotlib.pyplot as plt
 
 r = te.loada ('''
 J0: A -> D; A*0.05
@@ -24,4 +25,11 @@ r.setIntegrator('gillespie')
 r.integrator.variable_step_size = True
 r.getIntegrator().setValue('seed', 0)
 result = r.simulate(0,10)
-r.plot (result)
+#r.plot (result)
+
+plt.plot (result[:,0], result[:,1], linestyle='-', linewidth=2)
+plt.plot (result[:,0], result[:,2], linestyle='--', linewidth=2)
+plt.xlabel("Time", fontsize="xx-large")
+plt.ylabel("Individuals", fontsize="xx-large")
+plt.legend(['[A]', '[D]'])
+plt.show()
