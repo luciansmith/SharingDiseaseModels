@@ -45,6 +45,7 @@ VERSION HISTORY:
 ----------------
 Development started after discussion on 22-Sep-2015.
 Uploaded to Github on 8-March-2016 - no version number assigned
+Modifed on 16-March-2016 after paper review by Richard Smith? by Lucian and Jacob to get nicer plots
 
 
 DEVELOPER CONTACT INFO:
@@ -70,6 +71,10 @@ http://sites.google.com/site/jacobbarhak/
 ACKNOWLEDGEMENTS:
 -----------------
 Thanks to discussers in the SBML and DDMoRe discussion lists: Robert Phair, Lukas Endler, Gareth Smith, Nicolas Le Novere, Jose Juan Tapia, Jim Sluka, Leonard Harris, Fengkai Zhang, Nick Holford, Mike K Smith, Sarah Keating, Herbert Sauro, Michael Hucka, Kyle Medley.
+This work used the MIcro Simulation Tool (MIST) that is based on IEST. The IEST GPL disease modeling framework was initially supported by the Biostatistics and Economic Modeling Core of the MDRTC (P60DK020572) and by the Methods and Measurement Core of the MCDTR (P30DK092926), both funded by the National Institute of Diabetes and Digestive and Kidney Diseases. The modeling framework was initially defined as GPL and was funded by Chronic Disease Modeling for Clinical Research Innovations grant (R21DK075077) from the same institute. MIST, however, was developed without financial support.
+Additional thanks to Richard Smith? for his review: https://groups.google.com/forum/#!topic/public-scientific-reviews/8SCxed6KhlU
+
+
 
 
 LICENSE
