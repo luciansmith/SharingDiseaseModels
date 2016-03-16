@@ -41,12 +41,17 @@ r.setIntegrator('gillespie')
 r.integrator.variable_step_size = True
 r.getIntegrator().setValue('seed', 0)
 result = r.simulate(0,10)
-#r.plot (result)
 
-plt.plot (result[:,0], result[:,1], linestyle='-', linewidth=2)
-plt.plot (result[:,0], result[:,2], linestyle='--', linewidth=2)
-plt.plot (result[:,0], result[:,3], linestyle=':', linewidth=2)
+axis1 = plt.subplot(111)
+axis1.plot (result[:,0], result[:,1], linestyle='-', linewidth=2, color='r')
+axis1.plot (result[:,0], result[:,2], linestyle='--', linewidth=2, color='b')
+axis1.plot (result[:,0], result[:,3], linestyle=':', linewidth=2, color='g')
+plt.title("Example 2", fontsize="xx-large")
 plt.xlabel("Time", fontsize="xx-large")
 plt.ylabel("Individuals", fontsize="xx-large")
-plt.legend(['[H]', '[S]', '[D]'])
+box = axis1.get_position()
+axis1.set_position([box.x0, box.y0 +  box.height*0.2, box.width , box.height*0.8])
+# Put a legend to the right of the current axis
+axis1.legend(['[H]', '[S]', '[D]'], loc='upper center', bbox_to_anchor=(0.5, -0.225), ncol=3, fontsize=9)
+
 plt.show()
