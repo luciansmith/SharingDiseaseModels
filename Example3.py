@@ -69,6 +69,6 @@ plt.ylabel("Individuals", fontsize="xx-large")
 box = axis1.get_position()
 axis1.set_position([box.x0, box.y0 +  box.height*0.2, box.width , box.height*0.8])
 # Put a legend to the right of the current axis
-axis1.legend(['[MH]', '[MS]', '[MD]', '[FH]', '[FS]', '[FD]'], loc='upper center', bbox_to_anchor=(0.5, -0.225), ncol=6, fontsize=9)
+axis1.legend(['MH', 'MS', 'MD', 'FH', 'FS', 'FD'], loc='upper center', bbox_to_anchor=(0.5, -0.225), ncol=6, fontsize=9)
 
 plt.show()
